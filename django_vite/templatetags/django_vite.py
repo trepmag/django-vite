@@ -99,10 +99,12 @@ class DjangoViteAssetLoader:
             str -- The <script> tag and all <link> tags to import this asset in your page.
         """
 
+        scripts_attrs = scripts_attrs or {"type": "module", "async": "", "defer": ""}
+
         if DJANGO_VITE_DEV_MODE:
             return DjangoViteAssetLoader._generate_script_tag(
                 DjangoViteAssetLoader._generate_vite_server_url(path),
-                {"type": "module", "async": "", "defer": ""},
+                scripts_attrs,
             )
 
         if not self._manifest or path not in self._manifest:
@@ -113,7 +115,6 @@ class DjangoViteAssetLoader:
 
         tags = []
         manifest_entry = self._manifest[path]
-        scripts_attrs = scripts_attrs or {"type": "module", "async": "", "defer": ""}
 
         # Add dependent CSS
         tags.extend(self._generate_css_files_of_asset(path, []))
